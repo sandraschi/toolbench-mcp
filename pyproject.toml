@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "toolbench-mcp"
+version = "0.3.0"
+description = "FastMCP 3.1: curated ToolBench links, rescoring workflow, Glama contrast — companion to mcp-central-docs/toolbench."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Sandra Schieder" }]
+dependencies = [
+    "fastmcp>=3.1",
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "uvicorn[standard]>=0.32",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.8"]
+scraper = ["playwright>=1.49.0"]
+
+[project.urls]
+Homepage = "https://github.com/sandraschi/toolbench-mcp"
+Repository = "https://github.com/sandraschi/toolbench-mcp"
+
+[project.scripts]
+toolbench-mcp = "toolbench_mcp.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

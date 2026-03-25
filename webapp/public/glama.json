@@ -1,0 +1,17 @@
+{
+  "name": "toolbench-mcp",
+  "version": "0.3.0",
+  "description": "ToolBench workflow helper, Playwright scraper UI, fleet SOTA webapp.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sandraschi/toolbench-mcp"
+  },
+  "mcp": {
+    "transport": "streamable-http",
+    "url": "http://127.0.0.1:10817/mcp"
+  },
+  "fleet": {
+    "ports": { "frontend": 10816, "backend": 10817 },
+    "docs": "https://github.com/sandraschi/mcp-central-docs/tree/master/toolbench"
+  }
+}

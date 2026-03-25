@@ -1,0 +1,10 @@
+.venv/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+webapp/node_modules/
+webapp/dist/
+webapp/tsconfig.tsbuildinfo
+scrape_out/
