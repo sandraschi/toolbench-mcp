@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
 
 from toolbench_mcp.app import app
@@ -12,6 +13,27 @@ def test_health() -> None:
     j = r.json()
     assert j.get("ok") is True
     assert j.get("service") == "toolbench-mcp"
+
+
+async def _fake_run_script(_args: list[str]) -> dict:
+    return {"returncode": 0, "stdout": "", "stderr": "", "command": []}
+
+
+def test_scraper_post_accepts_json_body(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Regression: parameter name `body` once made FastAPI expect a query param; JSON body must work."""
+    import toolbench_mcp.scraper_api as sa
+
+    monkeypatch.setattr(sa, "_run_script", _fake_run_script)
+    c = TestClient(app)
+    r = c.post(
+        "/api/scraper/scrape",
+        json={
+            "urls_text": "https://toolbench.arcade.dev/tools/example",
+            "out_subdir": "pytest_tmp",
+        },
+    )
+    assert r.status_code == 200, r.json()
+    assert r.json().get("success") is True
 
 
 def test_scraper_status() -> None:

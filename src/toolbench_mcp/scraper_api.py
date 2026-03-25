@@ -16,6 +16,34 @@ from pydantic import BaseModel, Field
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
+class DiscoverBody(BaseModel):
+    search_url: str = Field(..., min_length=12)
+    out_subdir: str | None = None
+    max_pages: int = Field(15, ge=1, le=100)
+    delay_seconds: float = Field(3.0, ge=0.5, le=120.0)
+    jitter_seconds: float = Field(2.0, ge=0.0, le=60.0)
+    headed: bool = False
+
+
+class ScrapeBody(BaseModel):
+    urls_text: str = Field(..., min_length=8, description="One ToolBench assessment URL per line")
+    out_subdir: str | None = None
+    delay_seconds: float = Field(3.0, ge=0.5, le=120.0)
+    jitter_seconds: float = Field(2.0, ge=0.0, le=60.0)
+    save_html: bool = False
+    headed: bool = False
+
+
+class FullBody(BaseModel):
+    search_url: str = Field(..., min_length=12)
+    out_subdir: str | None = None
+    max_pages: int = Field(15, ge=1, le=100)
+    delay_seconds: float = Field(4.0, ge=0.5, le=120.0)
+    jitter_seconds: float = Field(2.0, ge=0.0, le=60.0)
+    save_html: bool = False
+    headed: bool = False
+
+
 def _script_path() -> Path:
     import os
 
@@ -105,50 +133,34 @@ def build_router() -> APIRouter:
             "hint": "pip install -e '.[scraper]' ; python -m playwright install chromium",
         }
 
-    class DiscoverBody(BaseModel):
-        search_url: str = Field(..., min_length=12)
-        out_subdir: str | None = None
-        max_pages: int = Field(15, ge=1, le=100)
-        delay_seconds: float = Field(3.0, ge=0.5, le=120.0)
-        jitter_seconds: float = Field(2.0, ge=0.0, le=60.0)
-        headed: bool = False
-
     @r.post("/discover")
-    async def discover(body: DiscoverBody) -> dict[str, Any]:
-        out = _resolve_out_dir(body.out_subdir)
+    async def discover(discover_in: DiscoverBody) -> dict[str, Any]:
+        out = _resolve_out_dir(discover_in.out_subdir)
         out.mkdir(parents=True, exist_ok=True)
         args = [
             "discover",
             "--search-url",
-            body.search_url,
+            discover_in.search_url,
             "--out-dir",
             str(out),
             "--max-pages",
-            str(body.max_pages),
+            str(discover_in.max_pages),
             "--delay-seconds",
-            str(body.delay_seconds),
+            str(discover_in.delay_seconds),
             "--jitter-seconds",
-            str(body.jitter_seconds),
+            str(discover_in.jitter_seconds),
         ]
-        if body.headed:
+        if discover_in.headed:
             args.append("--headed")
         result = await _run_script(args)
         return {"success": result["returncode"] == 0, **result, "out_dir": str(out)}
 
-    class ScrapeBody(BaseModel):
-        urls_text: str = Field(..., min_length=8, description="One ToolBench assessment URL per line")
-        out_subdir: str | None = None
-        delay_seconds: float = Field(3.0, ge=0.5, le=120.0)
-        jitter_seconds: float = Field(2.0, ge=0.0, le=60.0)
-        save_html: bool = False
-        headed: bool = False
-
     @r.post("/scrape")
-    async def scrape(body: ScrapeBody) -> dict[str, Any]:
-        out = _resolve_out_dir(body.out_subdir)
+    async def scrape_urls(scrape_in: ScrapeBody) -> dict[str, Any]:
+        out = _resolve_out_dir(scrape_in.out_subdir)
         out.mkdir(parents=True, exist_ok=True)
         urls_file = out / "urls.txt"
-        urls_file.write_text(body.urls_text.strip() + "\n", encoding="utf-8")
+        urls_file.write_text(scrape_in.urls_text.strip() + "\n", encoding="utf-8")
         args = [
             "scrape",
             "--urls-file",
@@ -156,46 +168,37 @@ def build_router() -> APIRouter:
             "--out-dir",
             str(out),
             "--delay-seconds",
-            str(body.delay_seconds),
+            str(scrape_in.delay_seconds),
             "--jitter-seconds",
-            str(body.jitter_seconds),
+            str(scrape_in.jitter_seconds),
         ]
-        if body.save_html:
+        if scrape_in.save_html:
             args.append("--save-html")
-        if body.headed:
+        if scrape_in.headed:
             args.append("--headed")
         result = await _run_script(args)
         return {"success": result["returncode"] == 0, **result, "out_dir": str(out)}
 
-    class FullBody(BaseModel):
-        search_url: str = Field(..., min_length=12)
-        out_subdir: str | None = None
-        max_pages: int = Field(15, ge=1, le=100)
-        delay_seconds: float = Field(4.0, ge=0.5, le=120.0)
-        jitter_seconds: float = Field(2.0, ge=0.0, le=60.0)
-        save_html: bool = False
-        headed: bool = False
-
     @r.post("/full")
-    async def full(body: FullBody) -> dict[str, Any]:
-        out = _resolve_out_dir(body.out_subdir)
+    async def full_run(full_in: FullBody) -> dict[str, Any]:
+        out = _resolve_out_dir(full_in.out_subdir)
         out.mkdir(parents=True, exist_ok=True)
         args = [
             "full",
             "--search-url",
-            body.search_url,
+            full_in.search_url,
             "--out-dir",
             str(out),
             "--max-pages",
-            str(body.max_pages),
+            str(full_in.max_pages),
             "--delay-seconds",
-            str(body.delay_seconds),
+            str(full_in.delay_seconds),
             "--jitter-seconds",
-            str(body.jitter_seconds),
+            str(full_in.jitter_seconds),
         ]
-        if body.save_html:
+        if full_in.save_html:
             args.append("--save-html")
-        if body.headed:
+        if full_in.headed:
             args.append("--headed")
         result = await _run_script(args)
         return {"success": result["returncode"] == 0, **result, "out_dir": str(out)}
