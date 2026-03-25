@@ -43,7 +43,7 @@ async def toolbench_guide(operation: GuideOperation) -> dict[str, Any]:
     """
     rec: list[str] = [
         "Open methodology before large refactors: https://toolbench.arcade.dev/methodology",
-        "Fleet docs: mcp-central-docs/toolbench/",
+        "This repo (README + scraper): https://github.com/sandraschi/toolbench-mcp",
     ]
     if operation == "get_help":
         return {

@@ -21,6 +21,9 @@ def test_scraper_status() -> None:
     j = r.json()
     assert "script_path" in j
     assert "playwright_available" in j
+    assert j.get("script_exists") is True
+    sp = str(j.get("script_path", "")).replace("\\", "/")
+    assert sp.endswith("scripts/scrape_toolbench_assessments.py")
 
 
 def test_meta_tools() -> None:

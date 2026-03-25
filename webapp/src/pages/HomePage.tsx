@@ -7,7 +7,7 @@ const LINKS: { label: string; href: string }[] = [
   { label: "Methodology", href: "https://toolbench.arcade.dev/methodology" },
   { label: "Improve", href: "https://toolbench.arcade.dev/improve" },
   { label: "Submit / rescoring", href: "https://toolbench.arcade.dev/submit" },
-  { label: "Fleet docs (toolbench/)", href: "https://github.com/sandraschi/mcp-central-docs/tree/master/toolbench" },
+  { label: "toolbench-mcp (source)", href: "https://github.com/sandraschi/toolbench-mcp" },
 ];
 
 export function HomePage() {

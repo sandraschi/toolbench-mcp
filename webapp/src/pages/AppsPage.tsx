@@ -61,7 +61,7 @@ export function AppsPage() {
               Fleet docs:{" "}
               {data.fleet?.docs ? (
                 <a href={data.fleet.docs} target="_blank" rel="noreferrer">
-                  mcp-central-docs/toolbench
+                  README
                 </a>
               ) : (
                 "—"

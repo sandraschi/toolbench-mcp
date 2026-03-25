@@ -1,4 +1,4 @@
-"""HTTP API: run mcp-central-docs toolbench Playwright scraper (subprocess)."""
+"""HTTP API: run the bundled Playwright scraper (subprocess)."""
 
 from __future__ import annotations
 
@@ -22,13 +22,7 @@ def _script_path() -> Path:
     p = os.getenv("TOOLBENCH_SCRAPER_SCRIPT", "").strip()
     if p:
         return Path(p)
-    return (
-        _REPO_ROOT.parent
-        / "mcp-central-docs"
-        / "toolbench"
-        / "scripts"
-        / "scrape_toolbench_assessments.py"
-    )
+    return _REPO_ROOT / "scripts" / "scrape_toolbench_assessments.py"
 
 
 def _output_root() -> Path:

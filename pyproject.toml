@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "toolbench-mcp"
 version = "0.3.0"
-description = "FastMCP 3.1: curated ToolBench links, rescoring workflow, Glama contrast — companion to mcp-central-docs/toolbench."
+description = "FastMCP 3.1: Arcade ToolBench helper (links, rescoring, bundled Playwright scraper, Iron Shell webapp)."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }

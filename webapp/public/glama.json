@@ -12,6 +12,6 @@
   },
   "fleet": {
     "ports": { "frontend": 10816, "backend": 10817 },
-    "docs": "https://github.com/sandraschi/mcp-central-docs/tree/master/toolbench"
+    "docs": "https://github.com/sandraschi/toolbench-mcp/blob/main/README.md"
   }
 }

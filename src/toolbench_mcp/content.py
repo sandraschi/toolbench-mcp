@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 TOOLBENCH_BASE = "https://toolbench.arcade.dev"
-MCP_CENTRAL_TOOLBENCH = (
-    "https://github.com/sandraschi/mcp-central-docs/tree/master/toolbench"
-)
+TOOLBENCH_MCP_REPO = "https://github.com/sandraschi/toolbench-mcp"
 
 LINKS: dict[str, str] = {
     "toolbench_home": f"{TOOLBENCH_BASE}/",
@@ -17,7 +15,7 @@ LINKS: dict[str, str] = {
     "arcade_mcp_clients": "https://docs.arcade.dev/en/get-started/mcp-clients",
     "arcade_call_tools_mcp": "https://docs.arcade.dev/en/get-started/quickstarts/call-tool-client",
     "arcade_mcp_python_ref": "https://docs.arcade.dev/en/references/mcp/python",
-    "mcp_central_toolbench": MCP_CENTRAL_TOOLBENCH,
+    "toolbench_mcp_repo": TOOLBENCH_MCP_REPO,
 }
 
 RESCORING_STEPS = """
@@ -25,7 +23,7 @@ RESCORING_STEPS = """
 2. Open Submit: https://toolbench.arcade.dev/submit (or Improve → Submit for rescoring).
 3. Sign in with an Arcade account. On the report card, use "Sign in to request rescan" when shown.
 4. Wait for async re-analysis; scores can lag commits.
-5. Record the new report URL in mcp-central-docs/toolbench/improvements/.
+5. Record the new report URL in your project changelog or docs (for your own traceability).
 """
 
 GLAMA_VS_TOOLBENCH = """
@@ -39,6 +37,6 @@ Use ToolBench for backlog triage; use Arcade's own MCP only when you need their 
 def help_text() -> str:
     return (
         "toolbench-mcp exposes curated ToolBench / rescoring context. "
-        "It does not call Arcade APIs or replace the Playwright scraper in mcp-central-docs/toolbench/scripts. "
+        "It does not call Arcade APIs; the optional scraper ships in this repo under scripts/. "
         "Arcade's product MCP (integrations runtime) is separate from ToolBench grading."
     )
