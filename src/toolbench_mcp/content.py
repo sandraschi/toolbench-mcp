@@ -37,6 +37,8 @@ Use ToolBench for backlog triage; use Arcade's own MCP only when you need their 
 def help_text() -> str:
     return (
         "toolbench-mcp exposes curated ToolBench / rescoring context. "
-        "It does not call Arcade APIs; the optional scraper ships in this repo under scripts/. "
-        "Arcade's product MCP (integrations runtime) is separate from ToolBench grading."
+        "It does not call Arcade APIs; the optional scraper under scripts/ is for maintainers "
+        "archiving their own public assessment pages — read Arcade terms, use rate limits, "
+        "prefer scrape+urls.txt over broad discover. Arcade's product MCP (integrations runtime) "
+        "is separate from ToolBench grading."
     )

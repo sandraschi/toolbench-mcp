@@ -12,9 +12,10 @@ mcp = FastMCP(
     "toolbench-mcp",
     instructions=(
         "Companion to Arcade ToolBench: rescoring workflow, methodology links, Glama contrast. "
-        "Webapp on 10816 runs the fleet Playwright scraper via /api/scraper (install .[scraper]). "
-        "Does not call ToolBench APIs. For bulk scores use Arcade Scoring API (request access). "
-        "Arcade's own MCP product = their integrations runtime (docs), not this server."
+        "Webapp on 10816 runs the Playwright scraper via /api/scraper (install .[scraper]); use only "
+        "for your own assessment pages per README (ToS, rate limits). Does not call ToolBench APIs. "
+        "For bulk scores use Arcade Scoring API (request access). Arcade's own MCP product = their "
+        "integrations runtime (docs), not this server."
     ),
 )
 

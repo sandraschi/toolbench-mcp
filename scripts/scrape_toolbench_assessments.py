@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """ToolBench assessment pages: discover URLs from search (with pagination) or scrape a URL list.
 
+Intended for maintainers saving copies of pages relevant to their own servers (see repo README:
+ToS, rate limits). The "discover" / "full" modes follow search results and may list many third-party
+URLs — prefer "scrape" with a hand-written urls.txt of only your report URLs if you want minimal scope.
+
 Respect the site: use --delay-seconds and --jitter-seconds; avoid parallel runs against production.
 
   python scrape_toolbench_assessments.py discover --search-url "..." --out-dir ./out

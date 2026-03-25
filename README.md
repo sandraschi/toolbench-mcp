@@ -2,7 +2,7 @@
 
 **FastMCP 3.1** helper for **Arcade ToolBench**: curated links, **rescoring** steps, **Glama vs ToolBench** notes, and an optional explanation of **Arcade’s own MCP product** (their hosted integrations runtime — separate from grading).
 
-This project is **not** affiliated with Arcade. It does **not** call ToolBench HTTP APIs; the Playwright scraper only loads public web pages the same way a browser would.
+This project is **not** affiliated with Arcade. It does **not** call ToolBench HTTP APIs; the optional Playwright scraper loads public pages like a browser. **You** are responsible for complying with Arcade’s terms and for using the scraper only in line with the **intended use** section below.
 
 ---
 
@@ -24,6 +24,22 @@ It is **not** the same thing as:
 - **Arcade’s “MCP product”** (hosted integrations like Gmail/Slack through their runtime) — that is a **separate** product for **using** Arcade’s tools with auth; it does **not** replace reading your ToolBench report or improving your own server repo.
 
 **This repo** (`toolbench-mcp`) gives you a small **MCP server** plus a **local webapp** so agents and humans can open the same links, follow rescoring steps, and optionally run a **bundled Playwright scraper** to **save offline copies** of assessment pages (respect rate limits; see the script’s `--delay-seconds` / `--jitter-seconds`).
+
+---
+
+## Scraping, terms of service, and intended use
+
+**Not legal advice.** Whether automated access is allowed is governed by **Arcade’s current policies** (and any terms shown on ToolBench). Read their legal pages yourself, for example **[Arcade Terms of Service](https://www.arcade.dev/terms-of-service)** and **[Arcade Privacy Policy](https://www.arcade.dev/privacy-policy)** — ToolBench is an Arcade surface, so those documents are the right starting point unless Arcade publishes ToolBench-specific terms elsewhere.
+
+**How this project expects you to use the scraper:** as a maintainer **archiving or reviewing feedback about your own MCP servers** (public report pages that concern **your** repos) so you can fix issues and request rescoring through official flows. That is a narrow, legitimate engineering use case; it is **not** a license to bulk-harvest **other people’s** report cards or to run aggressive crawls against production.
+
+**Safer patterns:**
+
+- Prefer **`scrape`** with a **`urls.txt` you built yourself** (only URLs for **your** server’s assessments). That avoids the **`discover`** path, which follows search-result pagination and can collect **many third-party** URLs if you point it at a broad listing.
+- Use **generous** `--delay-seconds` / `--jitter-seconds` and **do not** run multiple scrapers in parallel against ToolBench.
+- When Arcade offers an **official** path (e.g. **Submit / rescoring**, or **[API access](https://toolbench.arcade.dev/api-access)** if you are approved), prefer that over scraping for anything business-critical.
+
+If you are unsure, **ask Arcade** (support or your contact) before scaling automated access.
 
 ---
 

@@ -23,6 +23,22 @@ export function HelpPage() {
             — what ToolBench is, scraper, transports
           </li>
         </ul>
+        <h3>Scraper and Arcade policies</h3>
+        <p>
+          Use the scraper only for <strong>your own</strong> public assessment pages (e.g. archive feedback to improve your MCP server). Read Arcade’s terms (
+          <a href="https://www.arcade.dev/terms-of-service" target="_blank" rel="noreferrer">
+            Terms of Service
+          </a>
+          ,{" "}
+          <a href="https://www.arcade.dev/privacy-policy" target="_blank" rel="noreferrer">
+            Privacy
+          </a>
+          ). Prefer <code>scrape</code> with explicit URLs over broad <code>discover</code> if you want a minimal scope — details in the{" "}
+          <a href="https://github.com/sandraschi/toolbench-mcp/blob/main/README.md#scraping-terms-of-service-and-intended-use" target="_blank" rel="noreferrer">
+            README
+          </a>
+          .
+        </p>
         <h3>Install Playwright (scraper)</h3>
         <pre
           style={{
