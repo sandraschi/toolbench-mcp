@@ -1,16 +1,16 @@
 # toolbench-mcp
 
-**FastMCP 3.1** helper for **Arcade ToolBench**: curated links, **rescoring** steps, **Glama vs ToolBench** notes, and an optional explanation of **Arcade’s own MCP product** (their hosted integrations runtime — separate from grading).
+**FastMCP 3.1** helper for **Arcade ToolBench**: curated links, **rescoring** steps, **Glama vs ToolBench** notes, and an optional explanation of **Arcades own MCP product** (their hosted integrations runtime  separate from grading).
 
-This project is **not** affiliated with Arcade. It does **not** call ToolBench HTTP APIs; the optional Playwright scraper loads public pages like a browser. **You** are responsible for complying with Arcade’s terms and for using the scraper only in line with the **intended use** section below.
+This project is **not** affiliated with Arcade. It does **not** call ToolBench HTTP APIs; the optional Playwright scraper loads public pages like a browser. **You** are responsible for complying with Arcades terms and for using the scraper only in line with the **intended use** section below.
 
 ---
 
 ## What is ToolBench?
 
-If you have never heard of it, you are not alone — it is easy to miss.
+If you have never heard of it, you are not alone  it is easy to miss.
 
-**ToolBench** is a **public website** run by **Arcade** at **[toolbench.arcade.dev](https://toolbench.arcade.dev/)**. It is part of Arcade’s ecosystem around **MCP servers** (the protocol many AI coding tools use to expose tools to models).
+**ToolBench** is a **public website** run by **Arcade** at **[toolbench.arcade.dev](https://toolbench.arcade.dev/)**. It is part of Arcades ecosystem around **MCP servers** (the protocol many AI coding tools use to expose tools to models).
 
 Roughly, ToolBench is where Arcade:
 
@@ -20,22 +20,22 @@ Roughly, ToolBench is where Arcade:
 
 It is **not** the same thing as:
 
-- **Glama** ([glama.ai](https://glama.ai)) or other directories — those are mainly discovery; ToolBench tends to emphasize **transparent methodology** and **actionable** report pages for servers Arcade tracks.
-- **Arcade’s “MCP product”** (hosted integrations like Gmail/Slack through their runtime) — that is a **separate** product for **using** Arcade’s tools with auth; it does **not** replace reading your ToolBench report or improving your own server repo.
+- **Glama** ([glama.ai](https://glama.ai)) or other directories  those are mainly discovery; ToolBench tends to emphasize **transparent methodology** and **actionable** report pages for servers Arcade tracks.
+- **Arcades MCP product** (hosted integrations like Gmail/Slack through their runtime)  that is a **separate** product for **using** Arcades tools with auth; it does **not** replace reading your ToolBench report or improving your own server repo.
 
-**This repo** (`toolbench-mcp`) gives you a small **MCP server** plus a **local webapp** so agents and humans can open the same links, follow rescoring steps, and optionally run a **bundled Playwright scraper** to **save offline copies** of assessment pages (respect rate limits; see the script’s `--delay-seconds` / `--jitter-seconds`).
+**This repo** (`toolbench-mcp`) gives you a small **MCP server** plus a **local webapp** so agents and humans can open the same links, follow rescoring steps, and optionally run a **bundled Playwright scraper** to **save offline copies** of assessment pages (respect rate limits; see the scripts `--delay-seconds` / `--jitter-seconds`).
 
 ---
 
 ## Scraping, terms of service, and intended use
 
-**Not legal advice.** Whether automated access is allowed is governed by **Arcade’s current policies** (and any terms shown on ToolBench). Read their legal pages yourself, for example **[Arcade Terms of Service](https://www.arcade.dev/terms-of-service)** and **[Arcade Privacy Policy](https://www.arcade.dev/privacy-policy)** — ToolBench is an Arcade surface, so those documents are the right starting point unless Arcade publishes ToolBench-specific terms elsewhere.
+**Not legal advice.** Whether automated access is allowed is governed by **Arcades current policies** (and any terms shown on ToolBench). Read their legal pages yourself, for example **[Arcade Terms of Service](https://www.arcade.dev/terms-of-service)** and **[Arcade Privacy Policy](https://www.arcade.dev/privacy-policy)**  ToolBench is an Arcade surface, so those documents are the right starting point unless Arcade publishes ToolBench-specific terms elsewhere.
 
-**How this project expects you to use the scraper:** as a maintainer **archiving or reviewing feedback about your own MCP servers** (public report pages that concern **your** repos) so you can fix issues and request rescoring through official flows. That is a narrow, legitimate engineering use case; it is **not** a license to bulk-harvest **other people’s** report cards or to run aggressive crawls against production.
+**How this project expects you to use the scraper:** as a maintainer **archiving or reviewing feedback about your own MCP servers** (public report pages that concern **your** repos) so you can fix issues and request rescoring through official flows. That is a narrow, legitimate engineering use case; it is **not** a license to bulk-harvest **other peoples** report cards or to run aggressive crawls against production.
 
 **Safer patterns:**
 
-- Prefer **`scrape`** with a **`urls.txt` you built yourself** (only URLs for **your** server’s assessments). That avoids the **`discover`** path, which follows search-result pagination and can collect **many third-party** URLs if you point it at a broad listing.
+- Prefer **`scrape`** with a **`urls.txt` you built yourself** (only URLs for **your** servers assessments). That avoids the **`discover`** path, which follows search-result pagination and can collect **many third-party** URLs if you point it at a broad listing.
 - Use **generous** `--delay-seconds` / `--jitter-seconds` and **do not** run multiple scrapers in parallel against ToolBench.
 - When Arcade offers an **official** path (e.g. **Submit / rescoring**, or **[API access](https://toolbench.arcade.dev/api-access)** if you are approved), prefer that over scraping for anything business-critical.
 
@@ -43,9 +43,9 @@ If you are unsure, **ask Arcade** (support or your contact) before scaling autom
 
 ---
 
-## Should you use Arcade’s MCP?
+## Should you use Arcades MCP?
 
-**Only if you want their hosted integrations** (Gmail, Slack, GitHub, …) through [Arcade’s MCP clients](https://docs.arcade.dev/en/get-started/mcp-clients). That product is **separate** from **ToolBench** grading. It will **not** by itself raise scores on your GitHub MCP servers — use methodology + repo fixes for that.
+**Only if you want their hosted integrations** (Gmail, Slack, GitHub, ) through [Arcades MCP clients](https://docs.arcade.dev/en/get-started/mcp-clients). That product is **separate** from **ToolBench** grading. It will **not** by itself raise scores on your GitHub MCP servers  use methodology + repo fixes for that.
 
 ---
 
@@ -61,15 +61,15 @@ If you are unsure, **ask Arcade** (support or your contact) before scaling autom
 
 The scraper lives in this repo:
 
-- **`scripts/scrape_toolbench_assessments.py`** — discover assessment URLs from a ToolBench search results page (with pagination), scrape a list of URLs, or run **full** (discover then scrape). Output defaults to a per-run directory under **`scrape_out/`** when used from the webapp API.
+- **`scripts/scrape_toolbench_assessments.py`**  discover assessment URLs from a ToolBench search results page (with pagination), scrape a list of URLs, or run **full** (discover then scrape). Output defaults to a per-run directory under **`scrape_out/`** when used from the webapp API.
 
 The **webapp** drives that script via the backend:
 
-- `GET /api/scraper/status` — script path, Playwright installed, output root
-- `POST /api/scraper/discover` \| `scrape` \| `full` — same args as the CLI (JSON body)
-- `GET /api/scraper/tree?subdir=…` — list output files under `scrape_out/<subdir>/`
-- `GET /api/scraper/file?rel_path=…` — preview a file (path relative to output root)
-- `DELETE /api/scraper/output?subdir=…` — clear one subfolder
+- `GET /api/scraper/status`  script path, Playwright installed, output root
+- `POST /api/scraper/discover` \| `scrape` \| `full`  same args as the CLI (JSON body)
+- `GET /api/scraper/tree?subdir=`  list output files under `scrape_out/<subdir>/`
+- `GET /api/scraper/file?rel_path=`  preview a file (path relative to output root)
+- `DELETE /api/scraper/output?subdir=`  clear one subfolder
 
 Install Playwright into **this** venv: `pip install -e ".[scraper]"` then `python -m playwright install chromium`.
 
@@ -83,13 +83,13 @@ Install Playwright into **this** venv: `pip install -e ".[scraper]"` then `pytho
 ## Transports
 
 - **stdio:** `toolbench-mcp` or `python -m toolbench_mcp`
-- **HTTP:** `toolbench-mcp --serve` — MCP at `http://127.0.0.1:10817/mcp` (see `/health`)
+- **HTTP:** `toolbench-mcp --serve`  MCP at `http://127.0.0.1:10817/mcp` (see `/health`)
 
 ---
 
-## Webapp (fleet SOTA — WEBAPP_STANDARDS)
+## Webapp (fleet SOTA  WEBAPP_STANDARDS)
 
-Iron Shell: **sidebar** (Home, Tools, Apps, Help, Settings), **topbar** + breadcrumbs, **main** scroll, **logger** panel (timestamped levels, auto-scroll with pause-on-scroll-up), **SOTA Chat** FAB (**Ctrl+K** / **Cmd+K**, personas: Reductionist / Debugger / Explainer — logs to panel until an LLM is wired). **Dark** default + **light** in Settings. **Glom On:** `GET /api/meta/local-llm` probes Ollama `11434` and LM Studio `1234`. **`/apps`** loads **`public/glama.json`**. **`/tools`** = MCP inspector + Playwright scraper.
+Iron Shell: **sidebar** (Home, Tools, Apps, Help, Settings), **topbar** + breadcrumbs, **main** scroll, **logger** panel (timestamped levels, auto-scroll with pause-on-scroll-up), **SOTA Chat** FAB (**Ctrl+K** / **Cmd+K**, personas: Reductionist / Debugger / Explainer  logs to panel until an LLM is wired). **Dark** default + **light** in Settings. **Glom On:** `GET /api/meta/local-llm` probes Ollama `11434` and LM Studio `1234`. **`/apps`** loads **`public/glama.json`**. **`/tools`** = MCP inspector + Playwright scraper.
 
 | Backend | Path |
 |--------|------|
@@ -108,7 +108,7 @@ cd D:\Dev\repos\toolbench-mcp
 
 Double-click **`start.bat`** (repo root) or **`webapp\start.bat`** (frontend only) if you prefer a launcher without typing.
 
-**`webapp\start.ps1`** alone: if **nothing** is listening on **10817**, it **opens a second PowerShell window** with `python -m toolbench_mcp --serve`, waits for `/health`, then starts Vite — so you avoid `ECONNREFUSED` on the proxy. If the backend never comes up (venv missing, wrong cwd), start it manually: `cd` to repo root, `.\.venv\Scripts\Activate.ps1`, `python -m toolbench_mcp --serve`.
+**`webapp\start.ps1`** alone: if **nothing** is listening on **10817**, it **opens a second PowerShell window** with `python -m toolbench_mcp --serve`, waits for `/health`, then starts Vite  so you avoid `ECONNREFUSED` on the proxy. If the backend never comes up (venv missing, wrong cwd), start it manually: `cd` to repo root, `.\.venv\Scripts\Activate.ps1`, `python -m toolbench_mcp --serve`.
 
 Or: terminal A `python -m toolbench_mcp --serve`, terminal B `cd webapp; npm install; npm run dev`.
 
