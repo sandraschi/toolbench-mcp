@@ -1,4 +1,14 @@
-# Vite on 10816 — proxies /health, /api, /mcp to backend 10817.
+﻿Param([switch]$Headless)
+
+# --- SOTA Headless Standard ---
+if ($Headless -and ($Host.UI.RawUI.WindowTitle -notmatch 'Hidden')) {
+    Start-Process pwsh -ArgumentList '-NoProfile', '-File', $PSCommandPath, '-Headless' -WindowStyle Hidden
+    exit
+}
+$WindowStyle = if ($Headless) { 'Hidden' } else { 'Normal' }
+# ------------------------------
+
+# Vite on 10816 â€” proxies /health, /api, /mcp to backend 10817.
 # If nothing is listening on 10817, starts the FastAPI server in a new window first.
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
@@ -12,7 +22,7 @@ function Test-PortListening([int]$Port) {
 }
 
 if (-not (Test-PortListening $BackendPort)) {
-    Write-Host "No backend on $BackendPort — launching toolbench-mcp --serve (new window)..."
+    Write-Host "No backend on $BackendPort â€” launching toolbench-mcp --serve (new window)..."
     $activate = Join-Path $RepoRoot ".venv\Scripts\Activate.ps1"
     if (Test-Path $activate) {
         $inner = "cd '$RepoRoot'; . '$activate'; python -m toolbench_mcp --serve"
@@ -46,3 +56,4 @@ try {
 
 npm install
 npm run dev
+

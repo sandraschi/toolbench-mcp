@@ -1,26 +1,15 @@
-# Start backend (10817) then webapp (10816). Requires: uv sync, webapp npm install.
-$ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot
-$BackendPort = 10817
-$FrontendPort = 10816
-try {
-    npx --yes kill-port $BackendPort 2>$null
-} catch {}
-try {
-    npx --yes kill-port $FrontendPort 2>$null
-} catch {}
+Param([switch]$Headless)
 
-if (-not (Test-Path .venv)) {
-    py -3 -m venv .venv
+# --- SOTA Headless Standard ---
+if ($Headless -and ($Host.UI.RawUI.WindowTitle -notmatch 'Hidden')) {
+    Start-Process pwsh -ArgumentList '-NoProfile', '-File', $PSCommandPath, '-Headless' -WindowStyle Hidden
+    exit
 }
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]" -q
+$WindowStyle = if ($Headless) { 'Hidden' } else { 'Normal' }
+# ------------------------------
 
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot'; .\.venv\Scripts\Activate.ps1; python -m toolbench_mcp --serve"
+$env:FASTMCP_LOG_LEVEL = 'WARNING'
+# toolbench-mcp Start - Standards-Compliant SOTA
+Write-Host 'Starting toolbench-mcp...' -ForegroundColor Cyan
 
-Start-Sleep -Seconds 2
-Set-Location webapp
-npm install
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\webapp'; npm run dev"
-Start-Sleep -Seconds 4
-Start-Process "http://127.0.0.1:$FrontendPort/"
+uv run -m toolbench_mcp
