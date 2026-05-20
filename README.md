@@ -8,6 +8,9 @@
   <a href="https://github.com/PrefectHQ/fastmcp"><img src="https://img.shields.io/badge/FastMCP-3.2-7c5cfc?style=flat-square" alt="FastMCP"></a>
 </p>
 
+
+> 📖 **[Installation Guide](INSTALL.md)** — quick start, manual setup, and troubleshooting
+
 **FastMCP 3.1** helper for **Arcade ToolBench**: curated links, **rescoring** steps, **Glama vs ToolBench** notes, and an optional explanation of **Arcades own MCP product** (their hosted integrations runtime  separate from grading).
 
 This project is **not** affiliated with Arcade. It does **not** call ToolBench HTTP APIs; the optional Playwright scraper loads public pages like a browser. **You** are responsible for complying with Arcades terms and for using the scraper only in line with the **intended use** section below.
