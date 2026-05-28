@@ -16,3 +16,5 @@ FastMCP 3.1: Arcade ToolBench helper (links, rescoring, bundled Playwright scrap
 - `README.md` — full documentation
 - `pyproject.toml` — build config and entry points
 - `CLAUDE.md` — Claude Code context (if present)
+
+Install docs: follow mcp-central-docs/standards/AGENT_INSTALL_REFERENCE.md
