@@ -1,69 +1,18 @@
-﻿param(
-    [switch]$Headless,
-    [switch]$BackendOnly,
-    [switch]$FrontendOnly,
-    [switch]$NoBrowser
-)
+﻿Param([switch]$Headless)
 
-. "D:/Dev/repos/mcp-central-docs/standards/FleetStartMode.ps1"
-$FleetStart = Initialize-FleetStartMode @PSBoundParameters
-Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
+Write-Host ""
+Write-Host "DEPRECATED: toolbench-mcp webapp" -ForegroundColor Yellow
+Write-Host "Use scraper-mcp instead." -ForegroundColor White
+Write-Host ""
+Write-Host "  Start: D:\Dev\repos\scraper-mcp\webapp\start.ps1" -ForegroundColor Green
+Write-Host "  UI:    http://127.0.0.1:10999/tools" -ForegroundColor Cyan
+Write-Host ""
 
-$WebPort = 10816
-$BackendPort = 10817
-$RepoRoot = Split-Path -Parent $PSScriptRoot
-
-Write-Host "Starting toolbench-mcp (fleet SOTA)..." -ForegroundColor Cyan
-Write-Host "Frontend $WebPort | Backend $BackendPort | MCP /mcp" -ForegroundColor Gray
-
-Stop-FleetPortSquatters -Ports @($WebPort, $BackendPort)
-
-Set-Location $PSScriptRoot
-if (-not (Test-Path "node_modules")) { npm install }
-
-if ($FleetStart.RunBackend) {
-    Write-Host "Starting Python backend on port $BackendPort ..." -ForegroundColor Cyan
-    $backendCmd = @"
-`$env:PYTHONPATH = '$RepoRoot\src'
-Set-Location '$RepoRoot'
-uv run python -m toolbench_mcp --serve
-"@
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendCmd -WorkingDirectory $RepoRoot -WindowStyle Normal
-
-    $healthUrl = "http://127.0.0.1:$BackendPort/health"
-    $ready = $false
-    for ($i = 0; $i -lt 90; $i++) {
-        try {
-            $null = Invoke-WebRequest -Uri $healthUrl -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop
-            $ready = $true
-            Write-Host "Backend ready on $BackendPort" -ForegroundColor Green
-            break
-        } catch {
-            Start-Sleep -Seconds 1
-        }
-    }
-    if (-not $ready) {
-        Write-Host "Backend failed to bind on $BackendPort within 90s. Check the uvicorn window." -ForegroundColor Red
-        exit 1
+if (-not $Headless) {
+    $open = Read-Host "Open scraper-mcp webapp folder? [y/N]"
+    if ($open -eq 'y') {
+        Start-Process explorer.exe -ArgumentList "D:\Dev\repos\scraper-mcp\webapp"
     }
 }
 
-if (-not $FleetStart.RunFrontend) { return }
-
-$frontendUrl = "http://127.0.0.1:$WebPort/"
-if (-not $FleetStart.SkipBrowser) {
-    $pollAndOpen = @"
-for (`$i = 0; `$i -lt 60; `$i++) {
-    try {
-        `$null = Invoke-WebRequest -Uri '$frontendUrl' -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop
-        Start-Process '$frontendUrl'
-        exit
-    } catch { Start-Sleep -Seconds 1 }
-}
-"@
-    Start-Process powershell -ArgumentList "-NoProfile", "-WindowStyle", "Hidden", "-Command", $pollAndOpen
-    Write-Host "Browser will open when Vite is ready." -ForegroundColor Gray
-}
-
-Write-Host "Starting Vite on $WebPort ..." -ForegroundColor Green
-npm run dev -- --port $WebPort --host 127.0.0.1 --strictPort
+exit 1

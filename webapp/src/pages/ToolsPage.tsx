@@ -113,7 +113,12 @@ export function ToolsPage() {
     <div>
       <h1 style={{ fontSize: "1.5rem", marginTop: 0 }}>MCP Inspector</h1>
       <p style={{ color: "var(--muted)" }}>
-        Registered tools (dry-run via Cursor / MCP client). Playwright scraper runs server-side.
+        Registered tools (dry-run via Cursor / MCP client). Playwright scraper here is{" "}
+        <strong>ToolBench-only</strong>. For Glama + LobeHub + fleet coverage matrix, use{" "}
+        <a href="http://127.0.0.1:10999" target="_blank" rel="noreferrer">
+          scraper-mcp
+        </a>{" "}
+        (10999).
       </p>
 
       <div className="glass-panel" style={{ padding: "1rem", marginBottom: "1rem" }}>

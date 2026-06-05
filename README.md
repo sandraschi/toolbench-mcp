@@ -1,5 +1,8 @@
 # toolbench-mcp
 
+> **DEPRECATED** — use **[scraper-mcp](https://github.com/sandraschi/scraper-mcp)** instead.  
+> MCP: `http://127.0.0.1:10998/mcp` · Web: `http://127.0.0.1:10999` · See [DEPRECATED.md](DEPRECATED.md).
+
 <p align="center">
   <a href="https://github.com/casey/just"><img src="https://img.shields.io/badge/just-ready_to_go-7c5cfc?style=flat-square&logo=just&logoColor=white" alt="Just"></a>
   <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"></a>
@@ -14,6 +17,15 @@
 **FastMCP 3.1** helper for **Arcade ToolBench**: curated links, **rescoring** steps, **Glama vs ToolBench** notes, and an optional explanation of **Arcades own MCP product** (their hosted integrations runtime  separate from grading).
 
 This project is **not** affiliated with Arcade. It does **not** call ToolBench HTTP APIs; the optional Playwright scraper loads public pages like a browser. **You** are responsible for complying with Arcades terms and for using the scraper only in line with the **intended use** section below.
+
+### Superseded by scraper-mcp
+
+| Repo | Role | Ports |
+|------|------|-------|
+| **[scraper-mcp](https://github.com/sandraschi/scraper-mcp)** | Grades matrix + **toolbench_guide** + Playwright archiver | **10998** / **10999** |
+| **toolbench-mcp** (this) | **Deprecated** — do not start; ports quarantined | ~~10816 / 10817~~ |
+
+All features from this repo live in scraper-mcp now.
 
 ---
 
