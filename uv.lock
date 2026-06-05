@@ -1295,7 +1295,7 @@ scraper = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115" },
-    { name = "fastmcp", specifier = ">=3.1" },
+    { name = "fastmcp", specifier = ">=3.2,<4" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "playwright", marker = "extra == 'scraper'", specifier = ">=1.49.0" },
     { name = "prefab-ui", specifier = ">=0.14.0" },
