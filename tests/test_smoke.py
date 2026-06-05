@@ -64,3 +64,25 @@ def test_meta_local_llm() -> None:
     j = r.json()
     assert "ollama" in j
     assert "lm_studio" in j
+
+
+def test_capabilities() -> None:
+    c = TestClient(app)
+    r = c.get("/api/capabilities")
+    assert r.status_code == 200
+    j = r.json()
+    assert j.get("status") == "ok"
+    assert j.get("server", {}).get("name") == "toolbench-mcp"
+    assert "tool_surface" in j
+
+
+def test_logs_api() -> None:
+    c = TestClient(app)
+    r = c.get("/api/logs?limit=10")
+    assert r.status_code == 200
+    j = r.json()
+    assert "entries" in j
+    assert "total" in j
+    stats = c.get("/api/logs/stats")
+    assert stats.status_code == 200
+    assert stats.json().get("rotation") == "ring_buffer"

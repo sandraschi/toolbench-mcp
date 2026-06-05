@@ -5,6 +5,7 @@ import { AppShell } from "./layout/AppShell";
 import { AppsPage } from "./pages/AppsPage";
 import { HelpPage } from "./pages/HelpPage";
 import { HomePage } from "./pages/HomePage";
+import { LogsPage } from "./pages/LogsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ToolsPage } from "./pages/ToolsPage";
 
@@ -17,6 +18,7 @@ export default function App() {
             <Route element={<AppShell />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/tools" element={<ToolsPage />} />
+              <Route path="/logs" element={<LogsPage />} />
               <Route path="/apps" element={<AppsPage />} />
               <Route path="/help" element={<HelpPage />} />
               <Route path="/settings" element={<SettingsPage />} />

@@ -12,19 +12,24 @@ const LINKS: { label: string; href: string }[] = [
 
 export function HomePage() {
   const [health, setHealth] = useState<Record<string, unknown> | null>(null);
+  const [caps, setCaps] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const { append } = useLogger();
 
   useEffect(() => {
-    fetch("/health")
-      .then((r) => r.json())
-      .then((j) => {
-        setHealth(j as Record<string, unknown>);
-        append("INFO", "Health check OK");
+    Promise.all([
+      fetch("/health").then((r) => r.json()),
+      fetch("/api/capabilities").then((r) => r.json()),
+    ])
+      .then(([h, c]) => {
+        setHealth(h as Record<string, unknown>);
+        setCaps(c as Record<string, unknown>);
+        append("INFO", "Health + capabilities OK");
       })
       .catch((e) => {
         append("ERROR", `Health failed: ${String(e)}`);
         setHealth(null);
+        setCaps(null);
       })
       .finally(() => setLoading(false));
   }, [append]);
@@ -67,10 +72,17 @@ export function HomePage() {
           </div>
         </div>
         <div className="glass-panel" style={{ padding: "1rem" }}>
-          <div style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Quick</div>
-          <Link to="/tools" style={{ display: "block", marginTop: 8 }}>
-            Open Tools →
-          </Link>
+          <div style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Tool surface</div>
+          <div style={{ fontSize: "0.85rem", marginTop: 8 }}>
+            {loading ? (
+              <div className="skeleton" style={{ height: 24 }} />
+            ) : (
+              <>
+                {(caps?.tool_surface as { total?: number })?.total ?? 0} tools ·{" "}
+                <Link to="/tools">Inspector</Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

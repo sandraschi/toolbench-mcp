@@ -1,59 +1,69 @@
-﻿Param([switch]$Headless)
+﻿param(
+    [switch]$Headless,
+    [switch]$BackendOnly,
+    [switch]$FrontendOnly,
+    [switch]$NoBrowser
+)
 
-# --- SOTA Headless Standard ---
-if ($Headless -and ($Host.UI.RawUI.WindowTitle -notmatch 'Hidden')) {
-    Start-Process pwsh -ArgumentList '-NoProfile', '-File', $PSCommandPath, '-Headless' -WindowStyle Hidden
-    exit
-}
-$WindowStyle = if ($Headless) { 'Hidden' } else { 'Normal' }
-# ------------------------------
+. "D:/Dev/repos/mcp-central-docs/standards/FleetStartMode.ps1"
+$FleetStart = Initialize-FleetStartMode @PSBoundParameters
+Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
 
-# Vite on 10816 â€” proxies /health, /api, /mcp to backend 10817.
-# If nothing is listening on 10817, starts the FastAPI server in a new window first.
-$ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot
-$FrontendPort = 10816
+$WebPort = 10816
 $BackendPort = 10817
-$RepoRoot = Split-Path $PSScriptRoot
+$RepoRoot = Split-Path -Parent $PSScriptRoot
 
-function Test-PortListening([int]$Port) {
-    $c = @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue).Count
-    return $c -gt 0
-}
+Write-Host "Starting toolbench-mcp (fleet SOTA)..." -ForegroundColor Cyan
+Write-Host "Frontend $WebPort | Backend $BackendPort | MCP /mcp" -ForegroundColor Gray
 
-if (-not (Test-PortListening $BackendPort)) {
-    Write-Host "No backend on $BackendPort â€” launching toolbench-mcp --serve (new window)..."
-    $activate = Join-Path $RepoRoot ".venv\Scripts\Activate.ps1"
-    if (Test-Path $activate) {
-        $inner = "cd '$RepoRoot'; . '$activate'; python -m toolbench_mcp --serve"
-    } else {
-        $inner = "cd '$RepoRoot'; py -3 -m toolbench_mcp --serve"
-    }
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", $inner
-    $deadline = (Get-Date).AddSeconds(30)
-    $ok = $false
-    while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Milliseconds 500
+Stop-FleetPortSquatters -Ports @($WebPort, $BackendPort)
+
+Set-Location $PSScriptRoot
+if (-not (Test-Path "node_modules")) { npm install }
+
+if ($FleetStart.RunBackend) {
+    Write-Host "Starting Python backend on port $BackendPort ..." -ForegroundColor Cyan
+    $backendCmd = @"
+`$env:PYTHONPATH = '$RepoRoot\src'
+Set-Location '$RepoRoot'
+uv run python -m toolbench_mcp --serve
+"@
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendCmd -WorkingDirectory $RepoRoot -WindowStyle Normal
+
+    $healthUrl = "http://127.0.0.1:$BackendPort/health"
+    $ready = $false
+    for ($i = 0; $i -lt 90; $i++) {
         try {
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:$BackendPort/health" -UseBasicParsing -TimeoutSec 2
-            if ($r.StatusCode -eq 200) {
-                $ok = $true
-                Write-Host "Backend is up on $BackendPort."
-                break
-            }
+            $null = Invoke-WebRequest -Uri $healthUrl -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop
+            $ready = $true
+            Write-Host "Backend ready on $BackendPort" -ForegroundColor Green
+            break
         } catch {
-            # still starting
+            Start-Sleep -Seconds 1
         }
     }
-    if (-not $ok) {
-        Write-Warning "Backend did not become ready in 30s. In repo root run: python -m toolbench_mcp --serve"
+    if (-not $ready) {
+        Write-Host "Backend failed to bind on $BackendPort within 90s. Check the uvicorn window." -ForegroundColor Red
+        exit 1
     }
 }
 
-try {
-    npx --yes kill-port $FrontendPort 2>$null
-} catch {}
+if (-not $FleetStart.RunFrontend) { return }
 
-npm install
-npm run dev
+$frontendUrl = "http://127.0.0.1:$WebPort/"
+if (-not $FleetStart.SkipBrowser) {
+    $pollAndOpen = @"
+for (`$i = 0; `$i -lt 60; `$i++) {
+    try {
+        `$null = Invoke-WebRequest -Uri '$frontendUrl' -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop
+        Start-Process '$frontendUrl'
+        exit
+    } catch { Start-Sleep -Seconds 1 }
+}
+"@
+    Start-Process powershell -ArgumentList "-NoProfile", "-WindowStyle", "Hidden", "-Command", $pollAndOpen
+    Write-Host "Browser will open when Vite is ready." -ForegroundColor Gray
+}
 
+Write-Host "Starting Vite on $WebPort ..." -ForegroundColor Green
+npm run dev -- --port $WebPort --host 127.0.0.1 --strictPort

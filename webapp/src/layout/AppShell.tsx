@@ -6,6 +6,7 @@ import { LoggerPanel } from "../components/LoggerPanel";
 const NAV = [
   { to: "/", label: "Home" },
   { to: "/tools", label: "Tools" },
+  { to: "/logs", label: "Logs" },
   { to: "/apps", label: "Apps" },
   { to: "/help", label: "Help" },
   { to: "/settings", label: "Settings" },
@@ -14,6 +15,7 @@ const NAV = [
 const titles: Record<string, string> = {
   "/": "Dashboard",
   "/tools": "MCP Inspector",
+  "/logs": "Event Logs",
   "/apps": "Fleet Discovery",
   "/help": "Documentation",
   "/settings": "Configuration",
