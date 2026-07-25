@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLogger } from "../context/LoggerContext";
+import { API_BASE } from "../lib/api";
 
 type LogEntry = {
   id: string;
@@ -30,7 +31,7 @@ export function LogsPage() {
       const params = new URLSearchParams({ limit: "100", sort: "desc" });
       if (level) params.set("level", level);
       if (search.trim()) params.set("search", search.trim());
-      const r = await fetch(`/api/logs?${params}`);
+      const r = await fetch(API_BASE + `/api/logs?${params}`);
       const j = (await r.json()) as LogResponse;
       setData(j);
       append("INFO", `Loaded ${j.entries.length} log entries`);
@@ -48,7 +49,7 @@ export function LogsPage() {
 
   const exportLogs = async () => {
     try {
-      const r = await fetch("/api/logs/export?format=json");
+      const r = await fetch(API_BASE + "/api/logs/export?format=json");
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -64,7 +65,7 @@ export function LogsPage() {
 
   const clearLogs = async () => {
     try {
-      await fetch("/api/logs", { method: "DELETE" });
+      await fetch(API_BASE + "/api/logs", { method: "DELETE" });
       append("INFO", "Log buffer cleared");
       await refresh();
     } catch (e) {
@@ -82,7 +83,7 @@ export function LogsPage() {
       <div className="glass-panel" style={{ padding: "1rem", marginBottom: "1rem", display: "flex", gap: 12, flexWrap: "wrap" }}>
         <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
           Level
-          <select className="input" value={level} onChange={(e) => setLevel(e.target.value)} style={{ maxWidth: 140 }}>
+          <select className="bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-sm text-white placeholder-zinc-500 outline-none" value={level} onChange={(e) => setLevel(e.target.value)} style={{ maxWidth: 140 }}>
             <option value="">All</option>
             <option value="DEBUG">DEBUG</option>
             <option value="INFO">INFO</option>
@@ -91,7 +92,7 @@ export function LogsPage() {
           </select>
         </label>
         <input
-          className="input"
+          className="bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-sm text-white placeholder-zinc-500 outline-none"
           placeholder="Search detail / meta"
           value={search}
           onChange={(e) => setSearch(e.target.value)}

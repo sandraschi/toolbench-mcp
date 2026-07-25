@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLogger } from "../context/LoggerContext";
 import { useTheme } from "../context/ThemeContext";
+import { API_BASE } from "../lib/api";
 
 export function SettingsPage() {
   const { theme, setTheme, toggle } = useTheme();
@@ -8,7 +9,7 @@ export function SettingsPage() {
   const [llm, setLlm] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
-    fetch("/api/meta/local-llm")
+    fetch(API_BASE + "/api/meta/local-llm")
       .then((r) => r.json())
       .then((j) => {
         setLlm(j);
@@ -29,7 +30,7 @@ export function SettingsPage() {
         <label style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
           <span>Mode:</span>
           <select
-            className="input"
+            className="bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-sm text-white placeholder-zinc-500 outline-none"
             style={{ maxWidth: 200 }}
             value={theme}
             onChange={(e) => setTheme(e.target.value as "dark" | "light")}

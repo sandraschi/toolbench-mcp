@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLogger } from "../context/LoggerContext";
+import { API_BASE } from "../lib/api";
 
 const DEFAULT_SEARCH =
   "https://toolbench.arcade.dev/?q=sandraschi&status=SCORED";
@@ -40,7 +41,7 @@ export function ToolsPage() {
   const [previewContent, setPreviewContent] = useState("");
 
   const refreshStatus = useCallback(() => {
-    fetch("/api/scraper/status")
+    fetch(API_BASE + "/api/scraper/status")
       .then((r) => r.json())
       .then((j) => setStatus(j as ScraperStatus))
       .catch(() => setStatus(null));
@@ -48,14 +49,14 @@ export function ToolsPage() {
 
   const refreshTree = useCallback(() => {
     const q = new URLSearchParams({ subdir: outSubdir });
-    fetch(`/api/scraper/tree?${q}`)
+    fetch(API_BASE + `/api/scraper/tree?${q}`)
       .then((r) => r.json())
       .then((j) => setFiles(j.files ?? []))
       .catch(() => setFiles([]));
   }, [outSubdir]);
 
   useEffect(() => {
-    fetch("/api/meta/tools")
+    fetch(API_BASE + "/api/meta/tools")
       .then((r) => r.json())
       .then((j) => {
         setMetaTools((j.tools as MetaTool[]) ?? []);
@@ -100,7 +101,7 @@ export function ToolsPage() {
     append("DEBUG", `Preview ${path}`);
     try {
       const r = await fetch(
-        `/api/scraper/file?rel_path=${encodeURIComponent(path)}`,
+        API_BASE + `/api/scraper/file?rel_path=${encodeURIComponent(path)}`,
       );
       const j = await r.json();
       setPreviewContent(j.content ?? JSON.stringify(j));
@@ -165,7 +166,7 @@ export function ToolsPage() {
         <label style={{ display: "block", marginBottom: "0.5rem" }}>
           Output subfolder
           <input
-            className="input"
+            className="bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-sm text-white placeholder-zinc-500 outline-none"
             value={outSubdir}
             onChange={(e) => setOutSubdir(e.target.value)}
             style={{ display: "block", marginTop: 6, maxWidth: 520 }}
@@ -322,7 +323,7 @@ export function ToolsPage() {
             style={{ borderColor: "hsl(0 50% 40%)" }}
             onClick={() => {
               if (confirm(`Clear "${outSubdir}"?`))
-                fetch(`/api/scraper/output?subdir=${encodeURIComponent(outSubdir)}`, {
+                fetch(API_BASE + `/api/scraper/output?subdir=${encodeURIComponent(outSubdir)}`, {
                   method: "DELETE",
                 }).then(() => {
                   refreshTree();
