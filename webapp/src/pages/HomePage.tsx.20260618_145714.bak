@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogger } from "../context/LoggerContext";
-import { API_BASE } from "../lib/api";
 
 const LINKS: { label: string; href: string }[] = [
   { label: "ToolBench", href: "https://toolbench.arcade.dev/" },
@@ -20,7 +19,7 @@ export function HomePage() {
   useEffect(() => {
     Promise.all([
       fetch("/health").then((r) => r.json()),
-      fetch(API_BASE + "/api/capabilities").then((r) => r.json()),
+      fetch("/api/capabilities").then((r) => r.json()),
     ])
       .then(([h, c]) => {
         setHealth(h as Record<string, unknown>);

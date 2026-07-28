@@ -62,7 +62,7 @@ async def toolbench_guide(operation: GuideOperation) -> dict[str, Any]:
         return {
             "success": True,
             "result": content.RESCORING_STEPS.strip(),
-            "recommendations": [*rec, "Submit: https://toolbench.arcade.dev/submit"],
+            "recommendations": rec + ["Submit: https://toolbench.arcade.dev/submit"],
         }
     if operation == "glama_vs_toolbench":
         return {

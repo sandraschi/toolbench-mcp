@@ -15,7 +15,7 @@ from toolbench_mcp.meta_api import build_router as build_meta_router
 from toolbench_mcp.scraper_api import build_router as build_scraper_router
 from toolbench_mcp.server import mcp
 
-mcp_http = mcp.http_app(path="/")
+mcp_http = mcp.http_app(path="/mcp")
 
 
 def build_app() -> FastAPI:
