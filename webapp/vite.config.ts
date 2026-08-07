@@ -6,6 +6,7 @@ const API = "http://127.0.0.1:10817";
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: "0.0.0.0",
     allowedHosts: ['goliath'],
     port: 10816,
     strictPort: true,
